@@ -1,0 +1,17 @@
+<ul>
+  <li class="arrow next">
+    <% if lab.next -%>
+      <a href="<%= lab.next.filename %>#main_content">Next</a>
+    <% else -%>
+      <span>Next</span>
+    <% end -%>
+  </li>
+  <li class="arrow previous">
+    <% if lab.prev -%>
+      <a href="<%= lab.prev.filename %>#main_content">Previous</a>
+    <% else -%>
+      <a href="index.html">Previous</a>
+    <% end -%>
+  </li>
+  <li class="index_button"><a href="#">Index</a></li>
+</ul>
