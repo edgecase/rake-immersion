@@ -25,7 +25,7 @@ p. To make sure Rake is working correctly, change directory into the top project
 execute:
 rake
 
-p. if you already have a version of rake installed, or:
+p. if you already have a version of rake installed, or
 
 execute:
 ruby -Ilib bin/rake
