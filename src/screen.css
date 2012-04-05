@@ -320,10 +320,15 @@ div.instructions pre {
   background   : url(circle.png) no-repeat 0 8px; }
 
 #intro p em {
-  font-size  : 20px;
+  font-size  : 24px;
   font-style : normal; }
 
-
+#homepage .beep .terminal p {
+  padding-left : 15px;
+  font-size    : 14px;
+  font-family  : monospace;
+  color        : #404;
+}
 
 /* Labs Index
 ------------------------------------------------------------ */

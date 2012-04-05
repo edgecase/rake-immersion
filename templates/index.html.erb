@@ -43,10 +43,15 @@
       <div id="border_left">
         <div id="intro">
           <p>
-Rake is a tool that was created out of necessity.
-Being able to express and access dependency-based automation can be the difference between delivering code in hours instead of weeks.
-Written by Jim Weirich, EdgeCase's Chief Scientist, Rake brings the power of this automation to Ruby.
-But it is not specific to systems coded in Ruby - with Rake, developers can express dependency and automation for practically any system quickly and cleanly, putting power-user capabilites within everyone's reach.
+Rake is a tool that Jim Weirich, EdgeCase's Chief Scientist, created as a personal challenge.
+Because Ruby is so expressive, Jim decided he could use it to encode the dependencies and actions around building automation more cleanly than ever before.
+He built it.
+He was happy.
+Being able to easily express and access dependency-based automation was difference between him delivering high-quality software in hours instead of days.
+          </p>
+          <p>
+While Rake brings the power of this automation to Ruby, it is not specific to systems coded in Ruby.
+Developers can use Rake to express dependencies and automation for practically any system quickly and cleanly, putting power-user capabilites within everyone's reach.
           </p>
           <p>
             <em>
@@ -58,25 +63,37 @@ Rake Immersion is part guided tour and part reference, helping both new and seas
           <h1>Install Ruby to get Rake:</h1>
           <div class="beep">
             <p>
-              In order to run the immersion, you need Ruby installed. Rake is distributed as part of the Ruby installation. If you do not already have Ruby setup, please visit
-              <a href="http://ruby-lang.org/en/downloads" target="_blank">http://ruby-lang.org/en/downloads</a>
-              for operating system specific instructions.
+In order to run the immersion, you need Ruby installed. Rake is distributed as part of the Ruby installation. If you do not already have Ruby setup, please visit <a href="http://ruby-lang.org/en/downloads" target="_blank">http://ruby-lang.org/en/downloads</a> for operating system specific instructions.
             </p>
             <p>
-              To verify your installation, in your terminal window simply type:
+To verify your Ruby installation, in your terminal window type:
             </p>
             <div class="terminal">
               <p>$ ruby --version</p>
             </div>
-            <p>Any response for Ruby with a version number greater than 1.8 is fine.</p>
+            <p>
+Any response for Ruby with a version number greater than 1.8 is fine.
+            </p>
+            <p>
+For the more thorough user, to make sure Rake is working correctly, change directory into the top project directory of rake and simply type:</p>
+            <div class="terminal">
+              <p>$ rake</p>
+            </div>
+            <p>
+if you already have a version of rake installed, or:
+            </p>
+            <div class="terminal">
+              <p>$ ruby -Ilib bin/rake</p>
+            </div>
+            <p>
+otherwise.
+            </p>
           </div>
         </div>
         <div id="license">
           <h1>LICENSE <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"/></a></h1>
           <p>
-            RakeImmersion is released under
-            a <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative
-              Commons, Attribution-NonCommercial-ShareAlike</a> License.
+RakeImmersion is released under a <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons, Attribution-NonCommercial-ShareAlike</a> License.
           </p>
         </div>
       </div> <!-- /#border_left -->
