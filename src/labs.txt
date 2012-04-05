@@ -1,34 +1,36 @@
 ----------------------------------------------------------------------
-h1. Setup
+h1. Installation
 
 h3. Goals
 
-* To setup git so that it is ready for work.
+* To install a working version of Rake on your machine.
 
-h2. Setup Name and Email
+h2. Installing Ruby gets Rake
 
-p. If you have never used git before, you need to do some setup first.
-Run the following commands so that git knows your name and email.  If
-you have git already setup, you can skip down to the line ending
-section.
+p. In order to run the immersion, you need Ruby installed. Rake is distributed as part of the Ruby installation. If you do not already have Ruby setup, please visit <a href="http://ruby-lang.org/en/downloads" target="_blank">http://ruby-lang.org/en/downloads</a> for operating system specific instructions.
 
-execute:
-git config --global user.name "Your Name"
-git config --global user.email "your_email@whatever.com"
-
-h2. Setup Line Ending Preferences
-
-Also, for Unix/Mac users:
+p. To verify your Ruby installation,
 
 execute:
-git config --global core.autocrlf input
-git config --global core.safecrlf true
+ruby --version
 
-And for Windows users:
+p. Any response for Ruby with a version number greater than 1.8 is fine.
+
+h2. Make sure Rake is <i>Ready To Go!</i>
+
+p. <i>(It probably is, but in case you're having problems...)</i>
+
+p. To make sure Rake is working correctly, change directory into the top project directory of rake and
 
 execute:
-git config --global core.autocrlf true
-git config --global core.safecrlf true
+rake
+
+p. if you already have a version of rake installed, or:
+
+execute:
+ruby -Ilib bin/rake
+
+p. otherwise.
 
 ----------------------------------------------------------------------
 h1. More Setup

@@ -97,7 +97,7 @@ h1.lab_title {
   width          : 608px;
   margin         : 0 0 40px 84px;
   border-bottom  : 1px solid #dfdfdf;
-  color          : #222;
+  color          : #064;
   font           : 48px 'BebasNeueRegular', helvetica, arial, sans-serif;
   letter-spacing : 0.025em;
   white-space    : nowrap;
@@ -143,6 +143,7 @@ h1.lab_title em {
   position      : relative;
   margin        : 30px 0;
   padding       : 22px 0 2px 85px;
+  color         : #064;
   border-top    : 1px solid #ccc;
   font          : 32px baskerville, georgia, sans-serif; }
 
@@ -459,11 +460,15 @@ div.instructions pre {
   right : 0;
 }
 
-#pager .index_button a {
-  left  : 40px;
-  width : 44px;
+#pager .toc_button a {
+  left  : 24px;
+  width : 40px;
 }
 
+#pager .index_button a {
+  left  : 60px;
+  width : 40px;
+}
 
 
 /* Footer
@@ -514,14 +519,23 @@ footer nav .next * {
   padding      : 0 30px 0 40px;
   background   : url(next_arrow.png) no-repeat 100% 0; }
 
-footer nav .index_button a {
+footer nav .toc_button a {
   position    : absolute;
   top         : -5px;
-  left        : 174px;
+  left        : 154px;
   width       : 40px;
   height      : 40px;
   text-indent : -999em;
   background  : url(toc.png); }
+
+footer nav .index_button a {
+  position    : absolute;
+  top         : -5px;
+  left        : 194px;
+  width       : 40px;
+  height      : 40px;
+  text-indent : -999em;
+  background  : url(index.png); }
 
 footer a#edgecase_link_small {
   position    : absolute;
