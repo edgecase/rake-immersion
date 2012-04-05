@@ -1,8 +1,8 @@
 module Labs
   module_function
 
-  HTML_DIR = 'git_tutorial/html'
-  WORK_DIR = 'git_tutorial/work'
+  HTML_DIR = 'rake_tutorial/html'
+  WORK_DIR = 'rake_tutorial/work'
 
   class Lab
     attr_reader :name, :number, :lines

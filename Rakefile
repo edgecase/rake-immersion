@@ -5,9 +5,9 @@ require 'rake/clean'
 SAMPLES_DIR = Dir.pwd + "/samples"
 SAMPLE_TAG  = SAMPLES_DIR + "/buildtag"
 
-REPOS_DIR   = Dir.pwd + "/git_tutorial/repos"
+REPOS_DIR   = Dir.pwd + "/rake_tutorial/repos"
 
-CLOBBER.include("samples", "auto", "git_tutorial/repos")
+CLOBBER.include("samples", "auto", "rake_tutorial/repos")
 
 desc "Clean the samples directory"
 task :clean_samples do
@@ -29,7 +29,7 @@ task :publish => [:not_dirty, :build, :labs] do
   sh 'git checkout master'
   head = `git log --pretty="%h" -n1`.strip
   sh 'git checkout gh-pages'
-  cp FileList['git_tutorial/html/*'], '.'
+  cp FileList['rake_tutorial/html/*'], '.'
   sh 'git add .'
   sh "git commit -m 'Updated docs to #{head}'"
   sh 'git push'
@@ -38,17 +38,17 @@ end
 
 directory "dist"
 
-file "dist/git_tutorial.zip" => [:build, :labs, "dist"] do
-  sh 'zip -r dist/git_tutorial.zip git_tutorial'
+file "dist/rake_tutorial.zip" => [:build, :labs, "dist"] do
+  sh 'zip -r dist/rake_tutorial.zip rake_tutorial'
 end
 
 desc "Create the zipped tutorial"
-task :package => [:not_dirty, "dist/git_tutorial.zip"]
+task :package => [:not_dirty, "dist/rake_tutorial.zip"]
 
 desc "Create the zipped tutorial, but rebuild first"
 task :repackage => [:clobber, :package]
 
 desc "Upload the zipped tutorial to the download site."
-task :upload => [:not_dirty, "dist/git_tutorial.zip"] do
-  sh 'scp dist/git_tutorial.zip linode:htdocs/download/git_tutorial.zip'
+task :upload => [:not_dirty, "dist/rake_tutorial.zip"] do
+  sh 'scp dist/rake_tutorial.zip linode:htdocs/download/rake_tutorial.zip'
 end
