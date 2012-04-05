@@ -62,8 +62,15 @@ header .next * {
   left        : 542px;
   text-indent : -15px; }
 
+header .toc_button * {
+  top        : 11px;
+  left       : 634px;
+  width      : 40px;
+  height     : 40px;
+  background : url(toc.png) no-repeat 50% 50%; }
+
 header .index_button * {
-  top        : 31px;
+  top        : 51px;
   left       : 634px;
   width      : 40px;
   height     : 40px;
@@ -237,32 +244,35 @@ div.instructions pre {
 
 #homepage h1 {
   margin : 0 0 10px 0;
-  color  : #cf0000;
+  color  : #064;
   font   : 32px 'BebasNeueRegular', helvetica, arial, sans-serif; }
 
 #homepage h2 { font: 21px 'BebasNeueRegular', helvetica, arial, sans-serif; }
 
-#homepage a { color: #000; }
+#homepage a { color: #052; }
 
 #homepage .beep {
-  float        : left;
-  margin-right : 32px; }
+  float        : left; }
+
+#homepage .beep p {
+  font          : 18px baskerville, georgia, serif;
+  margin-bottom : 10px; }
 
 #homepage #install {
   position     : relative;
   left         : -23px;
-  padding-left : 346px;
+  padding-left : 85px;
   background   : url(install_circle.png) no-repeat 0 8px; }
 
 #homepage #gui_clients { padding-top: 32px; }
 
 #homepage #brought_to_you_by {
   position      : relative;
-  top           : -117px;
+  top           : -150px;
   left          : 55px;
   width         : 400px;
   margin-bottom : 40px;
-  padding-left  : 346px;
+  padding-left  : 350px;
   background    : url(install_circle.png) no-repeat 0 8px; }
 
 #homepage #brought_to_you_by a {
@@ -287,27 +297,30 @@ div.instructions pre {
 
 #homepage #license {
   position      : relative;
-  top           : -90px;
-  left          : -27px;
-  width         : 300px;
+  top           : 40px;
+  left          : 33px;
+  width         : 200px;
   margin-bottom : 20px;
   padding-left  : 27px;
-  background    : url(circle.png) no-repeat 0 8px; }
+  font-size     : 12px; }
 
 #homepage #license li {
   list-style   : none;
   line-height  : 18px; }
 
+#homepage #license img {
+  padding-left : 5px; }
+
 #intro p {
   position     : relative;
   left         : -27px;
   font         : 18px baskerville, georgia, serif;
-  margin       : 0 0 40px 0;
+  margin       : 0 0 30px 0;
   padding-left : 27px;
   background   : url(circle.png) no-repeat 0 8px; }
 
 #intro p em {
-  font-size  : 27px;
+  font-size  : 20px;
   font-style : normal; }
 
 
@@ -503,7 +516,7 @@ footer nav .index_button a {
   width       : 40px;
   height      : 40px;
   text-indent : -999em;
-  background  : url(index.png); }
+  background  : url(toc.png); }
 
 footer a#edgecase_link_small {
   position    : absolute;
