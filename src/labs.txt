@@ -7,7 +7,9 @@ h3. Goals
 
 h2. Installing Ruby gets Rake
 
-p. In order to run the immersion, you need Ruby installed. Rake is distributed as part of the Ruby installation. If you do not already have Ruby setup, please visit <a href="http://ruby-lang.org/en/downloads" target="_blank">http://ruby-lang.org/en/downloads</a> for operating system specific instructions.
+p. In order to run the immersion, you need Ruby installed.
+Rake is distributed as part of the Ruby installation.
+If you do not already have Ruby setup, please visit <a href="http://ruby-lang.org/en/downloads" target="_blank">http://ruby-lang.org/en/downloads</a> for operating system specific instructions.
 
 p. To verify your Ruby installation,
 
@@ -18,7 +20,7 @@ p. Any response for Ruby with a version number greater than 1.8 is fine.
 
 h2. Make sure Rake is <i>Ready To Go!</i>
 
-p. <i>(It probably is, but in case you're having problems...)</i>
+p. <em>(It probably is, but in case you're having problems...)</em>
 
 p. To make sure Rake is working correctly, change directory into the top project directory of rake and
 
@@ -31,6 +33,19 @@ execute:
 ruby -Ilib bin/rake
 
 p. otherwise.
+
+h2. Hey, wait just a second...
+
+p. Yes, you saw it.
+We ran Rake to test Rake.
+This may feel a bit self-referential, but that's part of the magic.
+
+p. *Executing Rake with no arguments conventionally runs the tests on a project.*
+
+p. In this context Rake was operating on the Rake project, running its tests.
+It's incredibly useful - but more about this later.
+
+p. The immersion will be introducing convention along with content, helping you to become savvy as well as proficient.
 
 ----------------------------------------------------------------------
 h1. More Setup

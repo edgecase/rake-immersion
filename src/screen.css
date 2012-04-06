@@ -234,6 +234,9 @@ div.instructions pre {
   font-style  : italic;
   color       : #555; }
 
+#main_content p strong {
+  color     : #e60;
+  font-size : 18px; }
 
 #border_left {
   position     : relative;
