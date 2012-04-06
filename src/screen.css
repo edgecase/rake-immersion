@@ -123,7 +123,8 @@ h1.lab_title em {
   width          : 608px;
   margin         : 0 0 0.15em 85px;
   font           : 28px 'BebasNeueRegular', helvetica, arial, sans-serif;
-  text-transform : uppercase; }
+  text-transform : uppercase;
+  color          : #064; }
 
 #main_content ul { margin: 0 0 40px 85px; }
 
