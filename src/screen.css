@@ -552,3 +552,8 @@ footer a#edgecase_link_small {
   background  : url(edgecase_logo_small.png); }
 
 
+/* Lab Image Styles
+------------------------------------------------------------ */
+
+img#web1 {
+  width : 350px; }

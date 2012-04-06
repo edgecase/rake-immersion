@@ -48,27 +48,48 @@ It's incredibly useful - but more about this later.
 p. The immersion will be introducing convention along with content, helping you to become savvy as well as proficient.
 
 ----------------------------------------------------------------------
-h1. More Setup
+h1. An Example: Building a Web Site
 
 h3. Goals
 
-* Get the tutorial materials setup and ready to run.
+* Introduce a problem that will be solved using Rake in the tutorial.
 
-h2. Get the Tutorial package.
+h2. The Initial Problem Domain
 
-p. Git the tutorial package from either:
+p. The tutorial focuses on learning by doing, so we're going to use Rake to build a static website.
+It will be simple at first, but we'll iterate as we go on.
+Our use of Rake will iterate as well.
 
-* The memory sticks provided in the tutorial
-* The URL "http://onestepback.org/download/git_tutorial.zip":http://onestepback.org/download/git_tutorial.zip
+<img id="web1" src="content_images_web1.jpg">
 
-h2. Unzip the tutorial
+p. Our starting point is about as simple as it can be.
+We have a Web Site Project Directory with a src and html directory below it.
+The src directory contains an index.md that needs to be transformed into an index.html file in the html directory.
 
-p. The tutorial package should have a main directory "git_tutorial"
-with three sub-directories:
+p. (In case you didn't know: md is the extention for markdown, indicating the file is encoded using "(external)textile":http://textile.thresholdstate.com format; html is the extension for hypertext markup language, the lingua franca of web sites.)
 
-* html -- These html files.  Point your browser to html/index.html
-* work -- An empty working directory.  Create your repos in here.
-* repos -- Prepackaged Git repositories so you can jump into the tutorial at any point.  If you get stuck, just copy the desired lab into your working directory.
+h2. Creating the Project
+
+p. Run a few quick command in a shell to get things started.
+
+execute:
+mkdir WSProject WSProject/src WSProject/html
+echo "p. Hello, World" > WSProject/src/index.md
+
+h2. Markdown to HTML
+
+p. We want to run Rake and have it do the markdown-to-html transformation for us.
+But first we need to know how to do it ourselves, of course.
+So, we'll experiment in irb.
+
+p. Irb is the playground of the ruby world.
+In it you can test ideas, exploring as you go along, experimenting so you can get it right more quickly.
+And it's on your system now!
+
+execute:
+irb
+
+
 
 ----------------------------------------------------------------------
 h1. Create a Project

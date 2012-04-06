@@ -118,6 +118,8 @@ $(function() {
     $(pre).replaceWith(container);
   });
 
+  $('.external').attr('target','_blank');
+
   window.pager = $('#pager');
   window.pagerShouldBeVisible = function(){
     return $(document).scrollTop() > 215;
