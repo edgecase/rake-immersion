@@ -103,3 +103,68 @@ Session:
 =irb
 EOF
 
+p. Success! Now we can build a Rakefile.
+
+h2. Creating a Rakefile
+
+p. What is a Rakefile?
+
+p. When you run Rake, it looks for a file named Rakefile in the current directory (or looks for one recursively up the directory tree) and interprets its contents as the instructions rake will use to perform the tasks you've asked rake to do. _(It also looks for rakefile, Rakefile.rb or rakefile.rb, but we'll use Rakefile for consistency.)_
+
+p. With this in mind, put the Rakefile directly in the project directory.
+
+File: WSProject/Rakefile
+require "RedCloth"
+
+file "html/index.html" => "src/index.md" do
+  open("html/index.html","w") do |target|
+    textile = IO.read "src/index.md"
+    target.write RedCloth.new(textile).to_html
+  end 
+end
+EOF
+
+p. Here we have a _file_ task that basically indicates the goal is to create a file "html/index.html" that depends on "src/index.md".
+If the file is missing, or the dependency has changed, the Ruby code between the _do_ and the _end_ will be executed.
+
+p. Note that what's between the _do_ and the _end_ is just Ruby code.
+Here, Rake is just adding the smarts to understand what the _file_ construct means and the framework to apply the task.
+
+h2. Check it out
+
+p. We have the project.
+We have a Rakefile.
+Go ahead and try it.
+
+Execute:
+cd WSProject
+=cd
+rake html/index.html
+=rake
+ls html
+=html
+cat html/index.html
+=contents
+
+Output:
+=cd
+=rake
+=html
+=contents
+EOF
+
+p. We've got the html output we wanted in the html/index.html file.
+Rake is working for us!
+
+----------------------------------------------------------------------
+h1. Congratulations!
+
+p. You should now be ready to use Rake like a pro.
+Of course, while practice makes perfect, even the pros aren't expected to remember everything.
+The index link on these pages, if you haven't explored it already, leads to a topic-based index that should get you back to relevant spots in the tutorial or the Rake User's Guide.
+Hopefully this will get past anything the tutorial hasn't covered or into advanced topics it couldn't.
+
+p. Rake is living software - it's under active development and Jim works hard to keep it moving forward.
+
+p. If you have any comments or suggestions on the tutorial or Rake itself, feel free to contact us at ...
+
