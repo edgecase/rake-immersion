@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------
 h1. Installation
 
-h3. Goals
+h3. Goal
 
 * To install a working version of Rake on your machine.
 
@@ -53,9 +53,9 @@ p. The immersion will be introducing convention along with content, helping you 
 ----------------------------------------------------------------------
 h1. An Example: Building a Web Site
 
-h3. Goals
+h3. Goal
 
-* Introduce a problem that will be solved using Rake in the tutorial.
+* To introduce a problem that will be solved using Rake in the tutorial.
 
 h2. The Initial Problem Domain
 
@@ -76,25 +76,37 @@ h2. Creating the Project
 p. Run a few quick command in a shell to get things started.
 
 Execute:
-mkdir WSProject WSProject/src WSProject/html
-echo "p. Hello, World" > WSProject/src/index.md
+mkdir WSProject
+cd WSProject
+mkdir src html
+echo "p. Hello, World" > src/index.md
+
+
+----------------------------------------------------------------------
+h1. A Simple File task
+
+h3. Goal
+
+* To create and run a simple _file_ task in a Rakefile.
 
 h2. Markdown to HTML
 
-p. We want to run Rake and have it do the markdown-to-html transformation for us.
-But first we need to know how to do it ourselves, of course.
-So, we'll experiment in irb.
+p. We want to run Rake and have it do the markdown-to-html transformation of the index file for us.
+We're going to use the _file_ task in Rake to accomplish this, but Rake will only set up the dependency and automation framework for us - we'll still need to do the actual file conversion.
+To figure it out, we'll use irb.
 
 p. Irb is the playground of the ruby world.
 In it you can test ideas, exploring as you go along, experimenting so you can get it right more quickly.
 And it's on your system now!
 
 p. Here we'll give "(external)RedCloth":http://redcloth.org a try - it's a rubygem that converts textile to html.
+Looking at the documentation, it appears that we can convert textile to html by creating a new RedCloth object with a String of textile and call it's html method.
+Let's try it.
 
 Execute:
 .irb
 .require "RedCloth"
-.s = "p. Hello, World"
+.s = "p. Hello, World\n"
 .RedCloth.new(s).to_html
 .quit
 =irb
@@ -109,11 +121,11 @@ h2. Creating a Rakefile
 
 p. What is a Rakefile?
 
-p. When you run Rake, it looks for a file named Rakefile in the current directory (or looks for one recursively up the directory tree) and interprets its contents as the instructions rake will use to perform the tasks you've asked rake to do. _(It also looks for rakefile, Rakefile.rb or rakefile.rb, but we'll use Rakefile for consistency.)_
+p. When you run Rake, it looks for a file named Rakefile in the current directory (or looks for one recursively up the directory tree) and interprets its contents as the instructions rake will use to perform the tasks you've asked it to do. _(It also looks for rakefile, Rakefile.rb or rakefile.rb, but we'll use Rakefile for consistency.)_
 
 p. With this in mind, put the Rakefile directly in the project directory.
 
-File: WSProject/Rakefile
+File: Rakefile
 require "RedCloth"
 
 file "html/index.html" => "src/index.md" do
@@ -125,10 +137,12 @@ end
 EOF
 
 p. Here we have a _file_ task that basically indicates the goal is to create a file "html/index.html" that depends on "src/index.md".
-If the file is missing, or the dependency has changed, the Ruby code between the _do_ and the _end_ will be executed.
+When this task is run, if the file is missing or the dependency has changed, the Ruby code between the _do_ and the _end_ will be executed.
 
 p. Note that what's between the _do_ and the _end_ is just Ruby code.
 Here, Rake is just adding the smarts to understand what the _file_ construct means and the framework to apply the task.
+Nothing special - but really, that _is_ special.
+We have the entirety of Ruby at our disposal!
 
 h2. Check it out
 
@@ -137,8 +151,6 @@ We have a Rakefile.
 Go ahead and try it.
 
 Execute:
-cd WSProject
-=cd
 rake html/index.html
 =rake
 ls html
@@ -147,7 +159,6 @@ cat html/index.html
 =contents
 
 Output:
-=cd
 =rake
 =html
 =contents
@@ -155,6 +166,171 @@ EOF
 
 p. We've got the html output we wanted in the html/index.html file.
 Rake is working for us!
+
+----------------------------------------------------------------------
+h1. Housekeeping - Clean and Clobber
+
+h3. Goals
+
+* To be able to clean up as we move forward so previous results don't look like current results.
+* To learn about the Clean and Clobber tasks.
+
+p. We're going to be reworking the same projects as we move the tutorial; to make sure things are working, we'll want to cleanse the project between Rake runs.
+
+h2. Clean
+
+h2. Clobber
+
+h2. Caveat
+
+----------------------------------------------------------------------
+h1. Expanding the Project
+
+h3. Goal
+
+* To motivate you to generalize the _file_ task
+
+h2. Another file
+
+p. While it's clear that converting one file was simplistic, it did show how the _file_ task worked.
+Let's go ahead and add a second markdown file to out project.
+
+Execute:
+echo "p. Goodbye, for now!" > src/goodbye.md
+
+p. We'd like to convert this file in the same way.
+Easy!
+We can just add another _file_ task.
+
+File: Rakefile
+require "RedCloth"
+
+file "html/index.html" => "src/index.md" do
+  open("html/index.html","w") do |target|
+    textile = IO.read "src/index.md"
+    target.write RedCloth.new(textile).to_html
+  end 
+end
+
+file "html/goodbye.html" => "src/goodbye.md" do
+  open("html/goodbye.html","w") do |target|
+    textile = IO.read "src/goodbye.md"
+    target.write RedCloth.new(textile).to_html
+  end 
+end
+EOF
+
+p. Now let's give it a try.
+
+Execute:
+rake html/index.html
+=rake1
+rake html/goodbye.html
+=rake2
+ls html
+=html
+
+Output:
+=rake1
+=rake2
+=html
+EOF
+
+p. This does just what you probably had expected.
+
+h2. What's that smell?
+
+p. Okay, now let's add another file.
+Or maybe three more.
+Or ten.
+
+p. If we were to proceed in this fashion, our Rakefile would become longer quickly, and brittlely redundant.
+In the world of Agile Development, this is regarded as a _bad smell_.
+
+p. As you can probably see there are two types of rendancy here.
+First, we are specifiying a file task for each file, and second, we are calling Rake once for every file we have to build.
+
+p. Something should probably be done when the smell gets too bad.
+Know though that everyone has there own threshold of pain: two, or even three files might not be smelly enough to some to make them clean things up.
+For others, they'd jump in and grap a mop at the first hint of an odor.
+
+p. Let's proceed as if we're the second type of person.
+
+----------------------------------------------------------------------
+h1. A Simple Task
+
+h3. Goal
+
+* To create and run a simple _task_ task in a Rakefile.
+
+h2. Simpler Calling
+
+p. If you want to build all the html files in the site with one call, doing something like
+
+Execute:
+rake html
+
+p. you need to call the individual _file_ tasks in the Rakefile.
+It isn't a _file_ task itself, it's just a task.
+Let's break it down.
+
+h2. Anatomy of a Rake Task
+
+p. Generally, a Rake _task_ has four parts
+
+<img id="task_anatomy" src="content_images_task_anatomy.jpg">
+
+* Method - the _task_ keyword,
+* Name - the name of the _task_, in this case _foo_,
+* Dependencies - the optional tasks that _foo_ depends upon, and
+* Action - the optional block containing the automation that runs.
+
+p. Tasks with neither dependencies nor actions aren't worth much more than placeholders, so are fairly useless.
+Or so one might think until you find out that you can append dependencies and actions at runtime.
+Using empty tasks as extension points or scaffolding for logic can help make complex tasks more straightforward.
+
+h2. A task to convert the files
+
+p. So, let's define a task to build our two files
+
+File: Rakefile
+require "RedCloth"
+
+task "html" => [ "html/index.html", "html/goodbye.html" ]
+
+file "html/index.html" => "src/index.md" do
+  open("html/index.html","w") do |target|
+    textile = IO.read "src/index.md"
+    target.write RedCloth.new(textile).to_html
+  end 
+end
+
+file "html/goodbye.html" => "src/goodbye.md" do
+  open("html/goodbye.html","w") do |target|
+    textile = IO.read "src/goodbye.md"
+    target.write RedCloth.new(textile).to_html
+  end 
+end
+EOF
+
+p. and give it a run
+
+Execute:
+rake html
+=rake
+date
+=date
+ls -l html
+=ls
+
+Output:
+=rake
+=date
+=ls
+EOF
+
+
+
 
 ----------------------------------------------------------------------
 h1. Congratulations!
