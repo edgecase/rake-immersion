@@ -89,6 +89,8 @@ p. Irb is the playground of the ruby world.
 In it you can test ideas, exploring as you go along, experimenting so you can get it right more quickly.
 And it's on your system now!
 
+p. Here we'll give "(external)RedCloth":http://redcloth.org a try - it's a rubygem that converts textile to html.
+
 Execute:
 .irb
 .require "RedCloth"
