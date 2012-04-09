@@ -18,6 +18,9 @@ ruby --version
 
 p. Any response for Ruby with a version number greater than 1.8 is fine.
 
+p. By the way, you need to know some Ruby to get the most from this tutorial.
+If you feel your Ruby experience is wanting, try "(external)Ruby Koans":http://rubykoans.com to gain enlightnment.
+
 h2. Make sure Rake is <i>Ready To Go!</i>
 
 p. <em>(It probably is, but in case you're having problems...)</em>
