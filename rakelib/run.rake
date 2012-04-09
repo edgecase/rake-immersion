@@ -5,7 +5,7 @@ module RunLabs
     SAMPLES_DIR + ("/%03d_%s.txt" % [lab_number, word])
   end
 
-  def run_command(command, var)
+  def run_command(command, var, session_input=[])
     command.gsub!(/<(\w+)>/) { |args, one| var[$1] }
     if command =~ /^cd +(\S+)$/
       dir = $1
@@ -13,9 +13,18 @@ module RunLabs
       Dir.chdir(dir)
       @command_output = "$ #{command}"
     else
-      output = `#{command.strip} 2>&1`
-      @command_output = "$ #{command}#{output}"
-      print output
+      if session_input.size == 0
+        output = `#{command.strip} 2>&1`
+        @command_output = "$ #{command}#{output}"
+        print output
+      else
+        f = File.open("__session.txt","w") do |f|
+          session_input.each { |line| f.puts line }
+        end
+        output = `#{command.strip} < __session.txt 2>&1`
+        @command_output = "$ #{command}\n#{output}"
+        print output
+      end
     end
   end
 
@@ -103,10 +112,40 @@ module RunLabs
           run_command(line, var) rescue nil
         elsif line =~ /^-/
           puts "SKIPPING: <#{line.strip}>"
+        elsif line =~ /^\./
+          @session_lines = [ line.sub!(/^\./, '') ]
+          state = :session
         else
           puts "RUNNING: <#{line.strip}>"
           line.sub!(/^\+/, '')
           run_command(line, var)
+        end
+      when :session
+        if line =~ /^=(\w+)/
+          puts "="
+          command = @session_lines.shift.strip
+          puts "SESSION: <#{command}> <#{@session_lines.inspect}>"
+          run_command(command, var, @session_lines)
+          @session_lines = nil
+          name = $1
+          puts "CAPTURING: #{name}"
+          sample_name = make_sample_name(lab_number, name)
+          open(sample_name, "w") do |out|
+            out.write(@command_output)
+          end
+          @was_just_run = true
+        elsif line =~ /^ *$/
+          unless @was_just_run
+            puts "normal"
+            command = @session_lines.shift.strip
+            puts "SESSION: <#{command}> <#{@session_lines.inspect}>"
+            run_command(command, var, @session_lines)
+            @session_lines = nil
+          end
+          state = :seek
+        else
+          @session_lines << line.sub!(/^./, '')
+          @was_just_run = false
         end
       end
     end

@@ -40,6 +40,7 @@ module Labs
     step_index = 0
     labs = []
     mode = :direct
+    submode = :normal
     gathered_line = ''
     io.each do |line|
       next if line =~ /^\s*-+\s*$/ # omit dividers
@@ -80,6 +81,10 @@ module Labs
           labs[lab_index] << "h4. Output:\n\n"
           gathered_line = "<pre class=\"sample\">"
           mode = :file
+        elsif line =~ /^Session:\s*$/
+          labs[lab_index] << "h4. Session:\n\n"
+          gathered_line = "<pre class=\"sample\">"
+          mode = :file
         elsif line =~ /^Set: +\w+=.*$/
           # Skip set lines
         elsif line =~ /^Freeze\s*$/
@@ -87,11 +92,18 @@ module Labs
         elsif line =~ /^=\w+/
           # Skip include lines
         else
-          labs[lab_index] << line unless lab_index < 0
+          unless submode == :instructions && line =~ /^\./
+            unless lab_index < 0
+              labs[lab_index] << line
+              submode = :normal
+            end
+          end
         end
       when :gather1
-        labs[lab_index] << gathered_line << " " << line
+        clean_line = line =~ /^\./ ? line[1..-1] : line
+        labs[lab_index] << gathered_line << " " << clean_line
         mode = :direct
+        submode = :instructions
       when :gather
         if line =~ /^\s*$/
           labs[lab_index] << gathered_line << "\n\n"
