@@ -187,7 +187,7 @@ Output:
 =html
 EOF
 
-p. Wait. The files there, but why didn't the file get generated this time?
+p. Wait. The file is there, but why didn't the file get generated this time?
 
 p. _Because Rake worked the first time!_
 The second time we ran it, the file was already there.
@@ -229,12 +229,30 @@ h3. Goals
 * To be able to clean up as we move forward so previous results don't look like current results.
 * To learn about the Clean and Clobber tasks.
 
-h2. Clean and Clobber
+h2. Cleanup
 
 p. Sometimes when you're building a target, there may some stray files left around, cluttering up the directories.
 We could walk through the directories ourselves and purge the files out, but Rake is about automating and this task is ripe for it.
 
 p. Rake has a two built-in cleansing tasks, _clean_ and _clobber_, that you get when you require the _rake/clean_ file in your rake file.
+
+h2. Clean
+
+p. You clean files by adding them to the _CLEAN_ file list and issuing a _rake clean_.
+The intention is that these are just stray files you my generate as you're building the target files.
+Consider this to be sweeping the floors of the workroom.
+
+h2. Clobber
+
+p. Clobbering is more brutal.
+The idea is to get out the wrecking ball and sandblaster and take things down to the foundation.
+You want to get rid of _everything_ that Rake built for you so you can start fresh.
+The files you add to the _CLOBBER_ file list are removed when you _rake clobber_.
+
+h2. Adding Cleanup to the Rakefile
+
+p. We want to start fresh at each issuance of rake in the tutorial.
+That's a clobber.
 
 File: Rakefile
 require "rake/clean"
@@ -323,14 +341,11 @@ rake html/index.html
 =rake1
 rake html/goodbye.html
 =rake2
-ls html
-=html
 
 Output:
 =clobber
 =rake1
 =rake2
-=html
 EOF
 
 p. This does just what you probably had expected.
@@ -366,7 +381,7 @@ h2. Simpler Calling
 p. If you want to build all the html files in the site with one call, doing something like
 
 Execute:
-rake html
+rake site
 
 p. you need to call the individual _file_ tasks in the Rakefile.
 It isn't a _file_ task itself, it's just a task.
@@ -384,7 +399,7 @@ html_files = [ "html/index.html", "html/goodbye.html" ]
 
 CLOBBER.include html_files
 
-task "html" => html_files
+task "site" => html_files
 
 file "html/index.html" => "src/index.md" do
   open("html/index.html","w") do |target|
@@ -411,15 +426,12 @@ p. When we give it a run,
 Execute:
 rake clobber
 =clobber
-rake html
+rake site
 =rake
-ls html
-=ls
 
 Output:
 =clobber
 =rake
-=ls
 EOF
 
 p. we get just what we should.
@@ -440,7 +452,7 @@ html_files = [ "html/index.html", "html/goodbye.html" ]
 
 CLOBBER.include html_files
 
-task "html" => html_files
+task "site" => html_files
 
 html_files.each do |html_file|
   src_file = html_file.gsub(/^html\//,"src/").gsub(/\.html$/,".md")
@@ -459,19 +471,140 @@ p. Let's try this one
 Execute:
 rake clobber
 =clobber
-rake html
+rake site
 =rake
-ls html
-=ls
 
 Output:
 =clobber
 =rake
-=ls
 EOF
 
 p. Beautiful!
 But we can do more.
+
+----------------------------------------------------------------------
+h1. FileLists and Patterns
+
+h3. Goals
+
+* To learn to use Rake FileLists.
+* To understand filename patterns in Rake.
+
+h2. Painful Knowledge
+
+p. While it's certainly possible to create and maintain a list of all the files used in a project, and to use that list in a Rakefile, it's not reasonable to expect a developer to maintain such a list.
+People are too error prone and their time is too valuable when rake can do it for us.
+
+p. What we need is a list of all the files that _should_ be there.
+We listed all of the files before; now we need to look for the sources and build the list of what's expected.
+
+File: Rakefile
+require "rake/clean"
+require "RedCloth"
+
+src_files = FileList[ "src/*.md" ]
+html_files = src_files.collect { |src_file| src_file.gsub(/^src\//,"html/").gsub(/\.md$/,".html") }
+
+CLOBBER.include html_files
+
+task "site" => html_files
+
+html_files.each do |html_file|
+  src_file = html_file.gsub(/^html\//,"src/").gsub(/\.html$/,".md")
+  file html_file => src_file do
+    open(html_file,"w") do |target|
+      puts "   generating #{target.path}"
+      textile = IO.read src_file
+      target.write RedCloth.new(textile).to_html
+    end 
+  end
+end
+EOF
+
+p. When we run it
+
+Execute:
+rake clobber
+=clobber
+rake site
+=rake
+
+Output:
+=clobber
+=rake
+EOF
+
+p. We get the results we want.
+
+h2. One more cleanup
+
+p. The only thing remaining in the file task iteration approach is noticing that clobbering (and cleaning) can remove whole directories.
+But if we do that, we need to make sure we create the directory before we try to starting creating files in it.
+We make the creation of the site dependent on Rake's create-directory-if-absent task (_directory_) to make sure the directory is created.
+
+p. This means
+
+File: Rakefile
+require "rake/clean"
+require "RedCloth"
+
+src_files = FileList[ "src/*.md" ]
+html_files = src_files.collect { |src_file| src_file.gsub(/^src\//,"html/").gsub(/\.md$/,".html") }
+
+CLOBBER.include "html"
+
+directory "html"
+
+task "site" => "html"
+task "site" => html_files
+
+html_files.each do |html_file|
+  src_file = html_file.gsub(/^html\//,"src/").gsub(/\.html$/,".md")
+  file html_file => src_file do
+    open(html_file,"w") do |target|
+      puts "   generating #{target.path}"
+      textile = IO.read src_file
+      target.write RedCloth.new(textile).to_html
+    end 
+  end
+end
+EOF
+
+p. Let's try it out.
+
+Execute:
+rake clobber
+=clobber
+rake site
+=rake
+
+Output:
+=clobber
+=rake
+EOF
+
+p. It looks like it works fine.
+But there is something else interesting going on.
+Do you see it?
+
+h2. Multiple task definitions
+
+p. Notice we have two tasks for "site."
+Aren't task names supposed to be unique?
+
+p. Yes.
+The trick is that there is really only one "site" task.
+During definition, if a task doesn't exist, it's created.
+But if a task with the given name already exists, the definition adds its dependencies to the existing task.
+This is more powerful then you might immediately think.
+Since we can define tasks in files we require into the Rakefile at runtime (that's how the clean and clobber get defined, for instance) we can add dependencies dynamically to existing tasks.
+Cool, no?
+
+p. And, the same thing works for automation.
+Defining an existing task with a block of actions will run those action as well as the existing actions for the task.
+
+p. This opens up the possibility for you to define 'extension tasks' in your Rake scripts.
+You could set up dependencies on certain tasks that initially had no dependencies or actions - but requiring additional files (which ones can also be dynamic) that added dependencies and actions can make those extension tasks live.
 
 ----------------------------------------------------------------------
 h1. Congratulations!
