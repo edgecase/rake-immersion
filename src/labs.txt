@@ -130,6 +130,7 @@ require "RedCloth"
 
 file "html/index.html" => "src/index.md" do
   open("html/index.html","w") do |target|
+    puts "   generating #{target.path}"
     textile = IO.read "src/index.md"
     target.write RedCloth.new(textile).to_html
   end 
@@ -139,10 +140,14 @@ EOF
 p. Here we have a _file_ task that basically indicates the goal is to create a file "html/index.html" that depends on "src/index.md".
 When this task is run, if the file is missing or the dependency has changed, the Ruby code between the _do_ and the _end_ will be executed.
 
-p. Note that what's between the _do_ and the _end_ is just Ruby code.
+p. Notice that what's between the _do_ and the _end_ is just Ruby code.
 Here, Rake is just adding the smarts to understand what the _file_ construct means and the framework to apply the task.
 Nothing special - but really, that _is_ special.
 We have the entirety of Ruby at our disposal!
+
+p. Notice that there's also a _puts_ in the action.
+This isn't generally needed, but for the tutorial this will provide some insight to when things are running and when they're not.
+It's just Ruby code, and you really can add whatever you'd like to it.
 
 h2. Check it out
 
@@ -167,6 +172,55 @@ EOF
 p. We've got the html output we wanted in the html/index.html file.
 Rake is working for us!
 
+h2. One more time
+
+p. Let's run that first Rakefile one more time, right now.
+
+Execute:
+rake html/index.html
+=rake
+ls html
+=html
+
+Output:
+=rake
+=html
+EOF
+
+p. Wait. The files there, but why didn't the file get generated this time?
+
+p. _Because Rake worked the first time!_
+The second time we ran it, the file was already there.
+The dependency didn't change, so Rake didn't need to regenerate it, and it didn't.
+
+p. Rake is doing it's thing correctly - but since we're going to be reworking the same projects as we move through the tutorial, we'll want to cleanse the project between Rake runs so we can make things generate for us.
+Fortunately, Rake has some built in goodness to make this easy.
+
+p. But first, since we have a little bit of Rake under our belts, let's step back and say a few words about a few words.
+
+----------------------------------------------------------------------
+h1. Rake Vocabulary
+
+h3. Goal
+
+* To understand a few words in a Rake-oriented context.
+
+h2. Fancy Words
+
+p. A *task* is used to compartmentalize work in Rake.
+Generally, every high level activity a user of your Rakefile may want to do is written as a task.
+Each task has a unique name that is used to reference it, *actions* that make up the automation that is run to perform the task, and a list of *dependencies* that must be completed before the automation may be performed.
+An action is normal Ruby code - you can do anything you're allowed to in Ruby.
+A dependency is the name of a task, either a single name of an array of names.
+
+p. A *file task* is what we just wrote.
+It's target is a file, it's dependencies are the files that it will be built from and it's automation is run to build the file.
+
+p. A *file list* is an array of files that Rake will build for us and that can be used as the dependencies of tasks.
+
+p. As you go on, we'll see more about how these are generated and used.
+For now, it's enough for you to have seen the terms so you don't feel like you've been blindsided.
+
 ----------------------------------------------------------------------
 h1. Housekeeping - Clean and Clobber
 
@@ -175,13 +229,46 @@ h3. Goals
 * To be able to clean up as we move forward so previous results don't look like current results.
 * To learn about the Clean and Clobber tasks.
 
-p. We're going to be reworking the same projects as we move the tutorial; to make sure things are working, we'll want to cleanse the project between Rake runs.
+h2. Clean and Clobber
 
-h2. Clean
+p. Sometimes when you're building a target, there may some stray files left around, cluttering up the directories.
+We could walk through the directories ourselves and purge the files out, but Rake is about automating and this task is ripe for it.
 
-h2. Clobber
+p. Rake has a two built-in cleansing tasks, _clean_ and _clobber_, that you get when you require the _rake/clean_ file in your rake file.
 
-h2. Caveat
+File: Rakefile
+require "rake/clean"
+require "RedCloth"
+
+CLOBBER.include "html/index.html"
+
+file "html/index.html" => "src/index.md" do
+  open("html/index.html","w") do |target|
+    puts "   generating #{target.path}"
+    textile = IO.read "src/index.md"
+    target.write RedCloth.new(textile).to_html
+  end 
+end
+EOF
+
+h2. Let's try again
+
+Execute:
+rake clobber
+=clobber
+rake html/index.html
+=rake
+ls html
+=html
+
+Output:
+=clobber
+=rake
+=html
+EOF
+
+p. Great - we now can clobber and regenerate.
+Just what we want before moving forward.
 
 ----------------------------------------------------------------------
 h1. Expanding the Project
@@ -203,17 +290,24 @@ Easy!
 We can just add another _file_ task.
 
 File: Rakefile
+require "rake/clean"
 require "RedCloth"
+
+CLOBBER.include "html/index.html"
 
 file "html/index.html" => "src/index.md" do
   open("html/index.html","w") do |target|
+    puts "   generating #{target.path}"
     textile = IO.read "src/index.md"
     target.write RedCloth.new(textile).to_html
   end 
 end
 
+CLOBBER.include "html/goodbye.html"
+
 file "html/goodbye.html" => "src/goodbye.md" do
   open("html/goodbye.html","w") do |target|
+    puts "   generating #{target.path}"
     textile = IO.read "src/goodbye.md"
     target.write RedCloth.new(textile).to_html
   end 
@@ -223,6 +317,8 @@ EOF
 p. Now let's give it a try.
 
 Execute:
+rake clobber
+=clobber
 rake html/index.html
 =rake1
 rake html/goodbye.html
@@ -231,6 +327,7 @@ ls html
 =html
 
 Output:
+=clobber
 =rake1
 =rake2
 =html
@@ -244,15 +341,16 @@ p. Okay, now let's add another file.
 Or maybe three more.
 Or ten.
 
-p. If we were to proceed in this fashion, our Rakefile would become longer quickly, and brittlely redundant.
-In the world of Agile Development, this is regarded as a _bad smell_.
+p. If we were to proceed in this fashion, our Rakefile would quickly become longer.
+And look at all the repeated code - so brittle and redundant!
+In the world of Agile Development, these are regarded as _bad smells_.
 
 p. As you can probably see there are two types of rendancy here.
 First, we are specifiying a file task for each file, and second, we are calling Rake once for every file we have to build.
 
 p. Something should probably be done when the smell gets too bad.
-Know though that everyone has there own threshold of pain: two, or even three files might not be smelly enough to some to make them clean things up.
-For others, they'd jump in and grap a mop at the first hint of an odor.
+Know though that everyone has there own tolerence of stench: In this case, two, or even three files might not be smelly enough to some to make them clean things up.
+For others, they'd jump in and grab a mop at the first hint of an odor.
 
 p. Let's proceed as if we're the second type of person.
 
@@ -272,34 +370,25 @@ rake html
 
 p. you need to call the individual _file_ tasks in the Rakefile.
 It isn't a _file_ task itself, it's just a task.
-Let's break it down.
-
-h2. Anatomy of a Rake Task
-
-p. Generally, a Rake _task_ has four parts
-
-<img id="task_anatomy" src="content_images_task_anatomy.jpg">
-
-* Method - the _task_ keyword,
-* Name - the name of the _task_, in this case _foo_,
-* Dependencies - the optional tasks that _foo_ depends upon, and
-* Action - the optional block containing the automation that runs.
-
-p. Tasks with neither dependencies nor actions aren't worth much more than placeholders, so are fairly useless.
-Or so one might think until you find out that you can append dependencies and actions at runtime.
-Using empty tasks as extension points or scaffolding for logic can help make complex tasks more straightforward.
+Let's do that.
 
 h2. A task to convert the files
 
-p. So, let's define a task to build our two files
+p. We'll simply define a task to build our two files
 
 File: Rakefile
+require "rake/clean"
 require "RedCloth"
 
-task "html" => [ "html/index.html", "html/goodbye.html" ]
+html_files = [ "html/index.html", "html/goodbye.html" ]
+
+CLOBBER.include html_files
+
+task "html" => html_files
 
 file "html/index.html" => "src/index.md" do
   open("html/index.html","w") do |target|
+    puts "   generating #{target.path}"
     textile = IO.read "src/index.md"
     target.write RedCloth.new(textile).to_html
   end 
@@ -307,30 +396,82 @@ end
 
 file "html/goodbye.html" => "src/goodbye.md" do
   open("html/goodbye.html","w") do |target|
+    puts "   generating #{target.path}"
     textile = IO.read "src/goodbye.md"
     target.write RedCloth.new(textile).to_html
   end 
 end
 EOF
 
-p. and give it a run
+p. Oh, and look - we include both files for clobbering in one statement.
+_Less smell!_
+
+p. When we give it a run,
 
 Execute:
+rake clobber
+=clobber
 rake html
 =rake
-date
-=date
-ls -l html
+ls html
 =ls
 
 Output:
+=clobber
 =rake
-=date
 =ls
 EOF
 
+p. we get just what we should.
+But let's keep going.
 
+h2. An iteration across the files
 
+p. What you may be starting to notice is that not just the automation in the tasks is Ruby - _everything in a Rakefile is Ruby!_
+And like everything else in Ruby, Rake tasks are actually _defined_ at runtime during the interpretation of the Ruby code, not statically by some compiler to make an executable.
+Perhaps suprisingly, this means we can define our tasks in an iteration!
+This lets us do
+
+File: Rakefile
+require "rake/clean"
+require "RedCloth"
+
+html_files = [ "html/index.html", "html/goodbye.html" ]
+
+CLOBBER.include html_files
+
+task "html" => html_files
+
+html_files.each do |html_file|
+  src_file = html_file.gsub(/^html\//,"src/").gsub(/\.html$/,".md")
+  file html_file => src_file do
+    open(html_file,"w") do |target|
+      puts "   generating #{target.path}"
+      textile = IO.read src_file
+      target.write RedCloth.new(textile).to_html
+    end 
+  end
+end
+EOF
+
+p. Let's try this one
+
+Execute:
+rake clobber
+=clobber
+rake html
+=rake
+ls html
+=ls
+
+Output:
+=clobber
+=rake
+=ls
+EOF
+
+p. Beautiful!
+But we can do more.
 
 ----------------------------------------------------------------------
 h1. Congratulations!
