@@ -22,6 +22,10 @@ module Labs
       @lines << line
     end
 
+    def ends_in_nl?
+      @lines[-1] == "\n"
+    end
+
     def filename
       "lab_%02d.html" % number
     end
@@ -81,10 +85,12 @@ module Labs
           labs[lab_index] << "h4. Output:\n\n"
           gathered_line = "<pre class=\"sample\">"
           mode = :file
+          submode = :output
         elsif line =~ /^Session:\s*$/
           labs[lab_index] << "h4. Session:\n\n"
           gathered_line = "<pre class=\"sample\">"
           mode = :file
+          submode = :output
         elsif line =~ /^Set: +\w+=.*$/
           # Skip set lines
         elsif line =~ /^Freeze\s*$/
@@ -113,8 +119,13 @@ module Labs
         end
       when :file
         if line =~ /^EOF$/
+          if (submode == :output)
+            labs[lab_index] << "\n" unless labs[lab_index].ends_in_nl?
+            labs[lab_index] << "$\n"
+          end
           labs[lab_index] << "</pre>\n"
           mode = :direct
+          submode = :normal
         elsif line =~ /^=(\w+)/
           sample_name = make_sample_name(lab_index+1, $1)
           open(sample_name) do |ins|
