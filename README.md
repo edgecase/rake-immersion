@@ -13,13 +13,6 @@ You can find the labs online at
 The labs are generated from a single source file that describes
 each of the labs.  The generation is done in two steps.
 
-Before running the labs, make sure you have the following alias
-in your .gitconfig file.  The `hist` command is used extensively
-throughout the tutorial.
-
-    [alias]
-      hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-
 First, the `rake run` command runs through each of the labs and
 executes the listed commands and captures the output.  The `auto`
 directory is used for the automatic running and the output is captured
@@ -56,7 +49,7 @@ The Format Directives are:
 
 ### h1. _\<lab name\>_
 
-Starts a new lab with the name _\<lab name\>_.  Each lab 
+Starts a new lab with the name _\<lab name\>_.  Each lab
 
 Example:
 
@@ -128,7 +121,7 @@ Example:
 
     File: hello.rb
     # This is the hello world program in Ruby.
-    
+
     puts "Hello, World!"
     EOF
 
