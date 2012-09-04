@@ -39,7 +39,7 @@ header a#home_link {
   width  : 564px;
   height : 90px; }
 
-header a#edgecase_link {
+header a#newcontext_link {
   top    : 96px;
   left   : 50px;
   width  : 334px;
@@ -285,7 +285,7 @@ div.instructions pre {
   width       : 280px;
   height      : 89px;
   text-indent : -999em;
-  background  : url(edgecase_logo.png); }
+  background  : url(newcontext_logo.png); }
 
 #homepage #other_resources {
   position      : relative;
@@ -541,7 +541,7 @@ footer nav .index_button a {
   text-indent : -999em;
   background  : url(index.png); }
 
-footer a#edgecase_link_small {
+footer a#newcontext_link_small {
   position    : absolute;
   top         : 24px;
   left        : 575px;
@@ -549,7 +549,7 @@ footer a#edgecase_link_small {
   width       : 169px;
   height      : 53px;
   text-indent : -999em;
-  background  : url(edgecase_logo_small.png); }
+  background  : url(newcontext_logo_small.png); }
 
 
 /* Lab Image Styles
